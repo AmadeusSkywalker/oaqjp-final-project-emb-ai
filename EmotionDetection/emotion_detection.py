@@ -26,6 +26,17 @@ def emotion_detector(text_to_analyze):
     # Make the POST request to the Watson API
     response = requests.post(url, headers=headers, json=input_json)
     
+    # Check for 400 status code (blank or invalid input)
+    if response.status_code == 400:
+        return {
+            'anger': None,
+            'disgust': None,
+            'fear': None,
+            'joy': None,
+            'sadness': None,
+            'dominant_emotion': None
+        }
+    
     # Convert the response text to a dictionary
     response_dict = json.loads(response.text)
     
@@ -59,17 +70,3 @@ def emotion_detector(text_to_analyze):
         'sadness': sadness_score,
         'dominant_emotion': dominant_emotion
     }
-
-
-# Testing the emotion detection function
-if __name__ == "__main__":
-    # Step 1: Import simulation (showing what would be typed in shell)
-    print(">>> from emotion_detection import emotion_detector")
-    
-    # Step 2: Test the application with the given text
-    test_text = "I am so happy I am doing this."
-    print(f">>> emotion_detector('{test_text}')")
-    
-    # Step 3: Execute and display the result
-    result = emotion_detector(test_text)
-    print(result)

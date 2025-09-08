@@ -1,3 +1,4 @@
+#!/usr/bin/env python3
 """
 Flask server for EmotionDetection web application.
 
@@ -28,14 +29,11 @@ def emotion_detector_route():
     """
     # Get the text from the request
     text_to_analyze = request.args.get('textToAnalyze')
-    
-    # Check if text was provided
-    if not text_to_analyze:
-        return "Please provide text to analyze."
-    
     # Call the emotion_detector function from the package
     result = emotion_detector(text_to_analyze)
-    
+    # Check if dominant_emotion is None (indicating blank or invalid input)
+    if result['dominant_emotion'] is None:
+        return "Invalid text! Please try again!"
     # Format the response as per customer requirements
     response = (
         f"For the given statement, the system response is "
@@ -46,7 +44,7 @@ def emotion_detector_route():
         f"'sadness': {result['sadness']}. "
         f"The dominant emotion is {result['dominant_emotion']}."
     )
-    
+
     return response
 
 
